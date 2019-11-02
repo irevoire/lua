@@ -3,7 +3,7 @@ mod lexeme;
 pub use lexeme::*;
 use nom::branch::alt;
 use nom::character::streaming::multispace0;
-use nom::{error::ErrorKind, Err, IResult};
+use nom::{Err, IResult};
 use std::io::{BufReader, Read};
 
 const BUF_SIZE: usize = 4096;
@@ -29,7 +29,6 @@ impl Lexer {
 }
 
 pub fn lex(input: &[u8]) -> IResult<&[u8], Lexeme> {
-    // println!("called with: buf=\"{:?}\"", std::str::from_utf8(input));
     // first remove the useless space that could exist at the start
     let (rem, _) = multispace0(input)?;
     // these are sorted by longest to smallest to be sure to not mix things up
@@ -101,42 +100,35 @@ impl Iterator for Lexer {
     type Item = Result<Lexeme, Box<dyn std::error::Error>>;
 
     fn next(&mut self) -> Option<Self::Item> {
-        // println!("current buf is: {:?}", self.idx);
         let slice = &self.buf[self.idx..self.max_idx];
         let initial_size = slice.len();
 
         match lex(slice) {
             Err(Err::Incomplete(_)) => {
                 // 1. move the part we were unable to parse to the start of the buffer
-                let mut old_idx = self.idx;
+                let old_idx = self.idx;
                 self.idx = 0;
                 for i in old_idx..self.max_idx {
                     self.buf[self.idx] = self.buf[i];
                     self.idx += 1;
                 }
-                // println!("buffer after move is: {:?}", std::str::from_utf8(&self.buf));
                 let res = self.reader.read(&mut self.buf[self.idx..]);
                 match res {
                     Ok(0) => return None, // EOF
                     Ok(n) => self.max_idx = n,
                     Err(e) => return Some(Err(e.into())),
                 };
-                // println!("buffer after read is: {:?}", std::str::from_utf8(&self.buf));
-                // println!("read called with idx: {}", self.idx);
                 self.idx = 0; // put back the pointer to where it could not parse
                 self.next()
             }
-            Err(e) => {
-                // println!("{:?}", e);
-                Some(Err("Error".into()))
-            }
+            Err(Err::Failure((_, e))) => Some(Err(e.description().into())),
+            Err(Err::Error((_, e))) => Some(Err(e.description().into())),
             Ok((rem, lex)) => {
                 // we compute the difference between the two slice to know how
                 // much we avanced
                 self.idx += initial_size - rem.len();
                 Some(Ok(lex))
             }
-            _ => None,
         }
     }
 }
