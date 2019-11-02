@@ -17,7 +17,7 @@ impl LexReader {
         }
     }
 
-    pub fn from(path: &std::path::Path) -> io::Result<Self> {
+    pub fn from(path: &str) -> io::Result<Self> {
         let f = File::open(path)?;
         let reader = BufReader::new(f);
         let lexer = lexer::Lexer::new(reader)?;
