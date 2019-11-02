@@ -173,7 +173,7 @@ pub fn is_ident(chr: u8) -> bool {
 pub fn parse_identifier(input: &[u8]) -> IResult<&[u8], Lexeme> {
     let (remaining, result) = take_while1(is_ident)(input)?;
     if let Ok(s) = std::str::from_utf8(result) {
-        return Ok((remaining, Lexeme::String(String::from(s))));
+        return Ok((remaining, Lexeme::Identifier(String::from(s))));
     }
     Err(Err::Error((input, ErrorKind::Char)))
 }
@@ -273,6 +273,11 @@ mod tests {
         );
         let test = b"\"bonjour la Fra";
         assert_eq!(parse_string(test), Err(Err::Incomplete(Needed::Size(1))));
+        let test = b"prout ";
+        assert_eq!(
+            parse_string(test),
+            Err(Err::Error((&b"prout "[..], ErrorKind::Char)))
+        );
         let test = b"prout";
         assert_eq!(
             parse_string(test),
@@ -290,12 +295,12 @@ mod tests {
         let test = b"bonjour ";
         assert_eq!(
             parse_identifier(test),
-            Ok((&b" "[..], Lexeme::String(String::from("bonjour"))))
+            Ok((&b" "[..], Lexeme::Identifier(String::from("bonjour"))))
         );
         let test = b"__add4 prout";
         assert_eq!(
             parse_identifier(test),
-            Ok((&b" prout"[..], Lexeme::String(String::from("__add4"))))
+            Ok((&b" prout"[..], Lexeme::Identifier(String::from("__add4"))))
         );
         let test = b"bonjour";
         assert_eq!(
