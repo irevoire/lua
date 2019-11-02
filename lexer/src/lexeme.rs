@@ -70,6 +70,18 @@ pub enum Lexeme {
     Identifier(String),
 }
 
+impl std::fmt::Display for Lexeme {
+    fn fmt(&self, form: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Lexeme::Int(v) => write!(form, "{}", v),
+            Lexeme::Float(v) => write!(form, "{}", v),
+            Lexeme::String(v) => write!(form, "{}", v),
+            Lexeme::Identifier(v) => write!(form, "{}", v),
+            o => write!(form, "{:?}", o),
+        }
+    }
+}
+
 macro_rules! define_keyword {
     ($fn:ident, $lex:ident, $tag:tt) => {
         pub fn $fn(input: &[u8]) -> IResult<&[u8], Lexeme> {
