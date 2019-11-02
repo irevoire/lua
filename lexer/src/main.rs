@@ -16,7 +16,7 @@ fn main() -> io::Result<()> {
     let mut reader = BufReader::new(f);
 
     println!("create lexer");
-    let mut lexer = lexer::Lexer::new(reader);
+    let mut lexer = lexer::Lexer::new(reader)?;
     println!("loop on lexemes");
     for lexeme in lexer {
         match lexeme {

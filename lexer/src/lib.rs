@@ -6,25 +6,25 @@ use nom::character::streaming::multispace0;
 use nom::{error::ErrorKind, Err, IResult};
 use std::io::{BufReader, Read};
 
-const BUF_SIZE: usize = 32;
+const BUF_SIZE: usize = 4096;
 
 pub struct Lexer {
     reader: BufReader<std::fs::File>,
-    buf: [u8; BUF_SIZE], // <- the lifetime should be here
+    buf: [u8; BUF_SIZE],
     idx: usize,
+    max_idx: usize,
 }
 
 impl Lexer {
-    pub fn new(mut reader: BufReader<std::fs::File>) -> Self {
+    pub fn new(mut reader: BufReader<std::fs::File>) -> std::io::Result<Self> {
         let mut buf = [0; BUF_SIZE];
-        reader.read(&mut buf);
-        unsafe {
-            Lexer {
-                reader,
-                buf,
-                idx: 0,
-            }
-        }
+        let max_idx = reader.read(&mut buf)?;
+        Ok(Lexer {
+            reader,
+            buf,
+            idx: 0,
+            max_idx,
+        })
     }
 }
 
@@ -102,7 +102,7 @@ impl Iterator for Lexer {
 
     fn next(&mut self) -> Option<Self::Item> {
         // println!("current buf is: {:?}", self.idx);
-        let slice = &self.buf[self.idx..];
+        let slice = &self.buf[self.idx..self.max_idx];
         let initial_size = slice.len();
 
         match lex(slice) {
@@ -110,15 +110,16 @@ impl Iterator for Lexer {
                 // 1. move the part we were unable to parse to the start of the buffer
                 let mut old_idx = self.idx;
                 self.idx = 0;
-                for i in old_idx..self.buf.len() {
+                for i in old_idx..self.max_idx {
                     self.buf[self.idx] = self.buf[i];
                     self.idx += 1;
                 }
                 // println!("buffer after move is: {:?}", std::str::from_utf8(&self.buf));
-                let read = self.reader.read(&mut self.buf[self.idx..]);
-                match read {
+                let res = self.reader.read(&mut self.buf[self.idx..]);
+                match res {
                     Ok(0) => return None, // EOF
-                    _ => (),
+                    Ok(n) => self.max_idx = n,
+                    Err(e) => return Some(Err(e.into())),
                 };
                 // println!("buffer after read is: {:?}", std::str::from_utf8(&self.buf));
                 // println!("read called with idx: {}", self.idx);
