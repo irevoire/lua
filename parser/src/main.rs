@@ -7,10 +7,14 @@ fn main() -> std::io::Result<()> {
         return Ok(());
     }
     args.next(); // executable name
-    let reader = parser::lexreader::LexReader::from(&args.next().unwrap())?;
+    let mut reader = parser::lexreader::LexReader::from(&args.next().unwrap())?;
 
-    let ast = parser::Ast::parse(reader);
-    println!("{:?}", ast);
+    let ast = parser::Ast::parse(&mut reader);
+    if let Err(e) = ast {
+        println!("Error: {}", e);
+    } else {
+        println!("Was able to parse the file");
+    }
 
     Ok(())
 }

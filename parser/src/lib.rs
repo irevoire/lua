@@ -27,6 +27,8 @@ impl Ast {
             if let Err(e) = res {
                 if e.is::<lexreader::EoFError>() {
                     break;
+                } else {
+                    return Err(e.into());
                 }
             } else {
                 vec.push(res?);
