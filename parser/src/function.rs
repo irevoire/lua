@@ -11,6 +11,10 @@ impl StatementType for Function {}
 impl ExprType for Function {}
 
 impl Function {
+    pub fn new() -> Self {
+        Function {}
+    }
+
     pub fn parse_definition(reader: &mut LexReader, env: &mut Env) -> Result<Self, ParseError> {
         Err("Unimplemented".into())
     }
@@ -20,6 +24,6 @@ impl Function {
         reader: &mut LexReader,
         env: &mut Env,
     ) -> Result<Self, ParseError> {
-        Err("Unimplemented".into())
+        Err("Unimplemented parse call".into())
     }
 }

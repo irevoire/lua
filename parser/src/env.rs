@@ -14,4 +14,14 @@ impl Env {
             vars: HashMap::new(),
         }
     }
+
+    pub fn base() -> Self {
+        let mut functions = HashMap::new();
+        functions.insert(String::from("print"), Function::new());
+
+        Env {
+            functions,
+            vars: HashMap::new(),
+        }
+    }
 }
