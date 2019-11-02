@@ -1,11 +1,9 @@
-use nom::bytes::streaming::{is_not, tag, take_till, take_until, take_while1};
-use nom::character::streaming::{anychar, char, digit1, line_ending, not_line_ending};
-use nom::character::{is_alphanumeric, is_space};
-use nom::multi::many0;
+use nom::bytes::streaming::{is_not, tag, take_until, take_while1};
+use nom::character::is_alphanumeric;
+use nom::character::streaming::{char, digit1};
 use nom::number::streaming::double;
 use nom::sequence::delimited;
-use nom::Needed::Unknown;
-use nom::{bytes, character, error::ErrorKind, Err, IResult, Needed};
+use nom::{error::ErrorKind, Err, IResult};
 
 #[derive(Debug, PartialEq)]
 pub enum Lexeme {
@@ -32,7 +30,7 @@ pub enum Lexeme {
     Until,
     While,
 
-    // operator
+    // symbol
     Plus,
     Minus,
     Mul,
@@ -49,19 +47,12 @@ pub enum Lexeme {
     LeftShift,
     OpenParenthesis,
     CloseParenthesis,
-
-    // comparison
     Equality,
     Inequality,
     LessThan,
     MoreThan,
     LessOrEqual,
     MoreOrEqual,
-    LogicalAnd,
-    LogicalOr,
-    LogicalNot,
-
-    // assignment
     Assign,
 
     // separator
@@ -82,7 +73,7 @@ pub enum Lexeme {
 macro_rules! define_keyword {
     ($fn:ident, $lex:ident, $tag:tt) => {
         pub fn $fn(input: &[u8]) -> IResult<&[u8], Lexeme> {
-            let (remaining, result) = tag($tag)(input)?;
+            let (remaining, _) = tag($tag)(input)?;
             Ok((remaining, Lexeme::$lex))
         }
     };
@@ -111,7 +102,7 @@ define_keyword!(parse_true, True, "true");
 define_keyword!(parse_until, Until, "until");
 define_keyword!(parse_while, While, "while");
 
-// Operators
+// Symbol
 define_keyword!(parse_plus, Plus, "+");
 define_keyword!(parse_minus, Minus, "-");
 define_keyword!(parse_mul, Mul, "*");
@@ -136,9 +127,6 @@ define_keyword!(parse_less_than, LessThan, "<");
 define_keyword!(parse_more_than, MoreThan, ">");
 define_keyword!(parse_less_or_equal, LessOrEqual, "<=");
 define_keyword!(parse_more_or_equal, MoreOrEqual, ">=");
-define_keyword!(parse_logical_and, LogicalAnd, "and");
-define_keyword!(parse_logical_or, LogicalOr, "or");
-define_keyword!(parse_logical_not, LogicalNot, "not");
 
 // assignment
 define_keyword!(parse_assign, Assign, "=");
@@ -148,8 +136,8 @@ define_keyword!(parse_semi_colon, SemiColon, ";");
 define_keyword!(parse_dot, Dot, ".");
 
 pub fn parse_comment(input: &[u8]) -> IResult<&[u8], Lexeme> {
-    let (remaining, result) = tag("--")(input)?;
-    let (remaining, result) = take_until("\n")(remaining)?;
+    let (remaining, _) = tag("--")(input)?;
+    let (remaining, _) = take_until("\n")(remaining)?;
 
     // remove the \n we matched in the take_until
     Ok((&remaining[1..], Lexeme::Comments))
@@ -193,6 +181,8 @@ pub fn parse_identifier(input: &[u8]) -> IResult<&[u8], Lexeme> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use nom::Needed;
+    use nom::Needed::Unknown;
 
     #[test]
     fn test_parse_break() {
