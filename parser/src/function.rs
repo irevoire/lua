@@ -1,29 +1,29 @@
 use crate::env::Env;
+/*
 use crate::expression::ExprType;
-use crate::lexreader::LexReader;
 use crate::statement::StatementType;
-use crate::ParseError;
+*/
+use nom::IResult;
 
-#[derive(Hash, Copy, Clone)]
+#[derive(Debug, Hash, Copy, Clone)]
 pub struct Function {}
-
-impl StatementType for Function {}
-impl ExprType for Function {}
 
 impl Function {
     pub fn new() -> Self {
         Function {}
     }
 
-    pub fn parse_definition(reader: &mut LexReader, env: &mut Env) -> Result<Self, ParseError> {
-        Err("Unimplemented".into())
+    pub fn parse_definition<'a>(
+        reader: &'a str,
+        env: &mut Env,
+    ) -> IResult<crate::statement::Statement, &'a str> {
+        unimplemented!("parse function definition");
     }
 
-    pub fn parse_call(
-        &mut self,
-        reader: &mut LexReader,
+    pub fn parse_call<'a>(
+        reader: &'a str,
         env: &mut Env,
-    ) -> Result<Self, ParseError> {
-        Err("Unimplemented parse call".into())
+    ) -> IResult<crate::statement::Statement, &'a str> {
+        unimplemented!("parse function call");
     }
 }

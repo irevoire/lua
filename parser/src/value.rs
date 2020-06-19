@@ -1,15 +1,11 @@
 use crate::env::Env;
-use crate::expression::ExprType;
-use crate::lexreader::LexReader;
-use crate::ParseError;
+use nom::IResult;
 
 #[derive(Hash, Copy, Clone)]
 pub struct Value {}
 
-impl ExprType for Value {}
-
 impl Value {
-    pub fn parse(name: &str, reader: &mut LexReader, env: &mut Env) -> Result<Self, ParseError> {
+    pub fn parse<'a>(name: &str, reader: &'a str, env: &mut Env) -> IResult<Self, &'a str> {
         Ok(Value {})
     }
 }

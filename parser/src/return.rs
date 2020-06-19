@@ -1,15 +1,13 @@
 use crate::env::Env;
-use crate::lexreader::LexReader;
 use crate::statement::StatementType;
 use crate::ParseError;
-
-// #[derive(Statement)]
+use std::io::Read;
 
 pub struct Return {}
 impl StatementType for Return {}
 
 impl Return {
-    pub fn parse(reader: &mut LexReader, env: &mut Env) -> Result<Self, ParseError> {
+    pub fn parse(reader: &mut impl Read, env: &mut Env) -> Result<Self, ParseError> {
         Ok(Return {})
     }
 }
