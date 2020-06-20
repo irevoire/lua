@@ -11,6 +11,22 @@ pub enum Expression {
     Literal(String),
 }
 
+pub fn binary(left: Expression, op: binary::Operator, right: Expression) -> Expression {
+    Expression::Binary(Binary {
+        left: Box::new(left),
+        op,
+        right: Box::new(right),
+    })
+}
+
+pub fn constant(c: Constant) -> Expression {
+    Expression::Constant(c)
+}
+
+pub fn literal<S: Into<String>>(s: S) -> Expression {
+    Expression::Literal(s.into())
+}
+
 use Expression::*;
 
 impl std::fmt::Display for Expression {

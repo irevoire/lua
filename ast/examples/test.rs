@@ -1,13 +1,14 @@
-use ast::expression::{binary, Constant, Expression};
+use ast::expression::{binary, constant, literal, Constant};
+use ast::statement::{assignment, Sequence, Statement};
+
 fn main() {
-    let left = Expression::Constant(Constant::Int(1));
-    let right = Expression::Constant(Constant::Int(2));
+    let left = constant(Constant::Int(1));
+    let right = constant(Constant::Int(2));
 
-    let expr = Expression::Binary(binary::Binary {
-        left: Box::new(left),
-        op: binary::Operator::Add,
-        right: Box::new(right),
-    });
+    let expr = binary(left, binary::Operator::Add, right);
 
-    println!("{}", expr);
+    let var = literal("a");
+    let stmt = assignment(var, expr);
+
+    println!("{}", stmt);
 }
