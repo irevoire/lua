@@ -1,4 +1,5 @@
 pub mod expression;
+pub mod statement;
 
 use std::collections::HashMap;
 

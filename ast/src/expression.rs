@@ -9,6 +9,7 @@ pub enum Expression {
     Binary(binary::Binary),
     Constant(constant::Constant),
     Literal(String),
+    Nil,
 }
 
 pub fn binary(left: Expression, op: binary::Operator, right: Expression) -> Expression {
@@ -27,6 +28,10 @@ pub fn literal<S: Into<String>>(s: S) -> Expression {
     Expression::Literal(s.into())
 }
 
+pub fn nil() -> Expression {
+    Expression::Nil
+}
+
 use Expression::*;
 
 impl std::fmt::Display for Expression {
@@ -35,6 +40,7 @@ impl std::fmt::Display for Expression {
             Binary(b) => b.fmt(f),
             Constant(c) => c.fmt(f),
             Literal(s) => s.fmt(f),
+            Nil => write!(f, "nil"),
         }
     }
 }
