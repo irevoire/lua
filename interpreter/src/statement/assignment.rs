@@ -7,7 +7,7 @@ impl Run for Assignment {
         let right = self.right.run(env);
 
         if let Expression::Literal(left) = &self.left {
-            env.insert(left.into(), right);
+            env.insert(left.clone(), right);
         } else {
             panic!("assignment with unsupported left side");
         }

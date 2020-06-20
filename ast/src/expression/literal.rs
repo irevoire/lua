@@ -1,14 +1,16 @@
-#[derive(Debug)]
-pub enum Literal {
-    Int(i64),
+#[derive(Clone, Debug, Eq, PartialEq, Hash)]
+pub struct Literal {
+    pub value: String,
 }
-
-use Literal::*;
 
 impl std::fmt::Display for Literal {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Int(i) => i.fmt(f),
-        }
+        self.value.fmt(f)
+    }
+}
+
+impl From<&str> for Literal {
+    fn from(s: &str) -> Self {
+        Literal { value: s.into() }
     }
 }

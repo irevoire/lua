@@ -8,8 +8,9 @@ use ast::statement::Statement;
 impl Run for Statement {
     fn run(&self, env: &mut Environment) -> Expression {
         match self {
-            Statement::Sequence(s) => s.run(env),
             Statement::Assignment(a) => a.run(env),
+            Statement::Expression(e) => e.run(env),
+            Statement::Sequence(s) => s.run(env),
         }
     }
 }

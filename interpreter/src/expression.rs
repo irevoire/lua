@@ -1,4 +1,6 @@
 pub mod binary;
+pub mod call;
+pub mod function;
 
 use crate::{Environment, Run};
 use ast::expression::Expression;
@@ -9,7 +11,10 @@ impl Run for Expression {
     fn run(&self, env: &mut Environment) -> Expression {
         match self {
             Binary(b) => b.run(env),
-            expr => expr.clone(), // nothing to execute
+            Call(c) => c.run(env),
+            Function(f) => f.run(env),
+            Literal(l) => env.get(l).unwrap().clone(),
+            Constant(_) | Nil => self.clone(), // nothing to execute
         }
     }
 }

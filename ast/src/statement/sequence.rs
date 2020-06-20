@@ -7,6 +7,9 @@ pub struct Sequence {
 
 impl std::fmt::Display for Sequence {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.sequence.iter().map(|stmt| stmt.fmt(f)).collect()
+        self.sequence
+            .iter()
+            .map(|stmt| writeln!(f, "{}", stmt))
+            .collect()
     }
 }
