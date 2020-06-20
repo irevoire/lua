@@ -1,2 +1,2 @@
 [workspace]
-members = ["lexer", "ast"]
+members = ["lexer", "ast", "interpreter"]

@@ -3,7 +3,7 @@ pub use operator::Operator;
 
 use super::Expression;
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct Binary {
     pub left: Box<Expression>,
     pub op: Operator,
