@@ -26,6 +26,18 @@ pub fn assignment(left: impl Into<Expression>, right: impl Into<Expression>) -> 
     })
 }
 
+pub fn ifthenelse(
+    cond: impl Into<Expression>,
+    if_body: Sequence,
+    else_body: Option<Sequence>,
+) -> Statement {
+    Statement::IfThenElse(IfThenElse {
+        cond: cond.into(),
+        if_body,
+        else_body,
+    })
+}
+
 pub fn r#return(ret: Vec<impl Into<Expression>>) -> Statement {
     Statement::Return(Return {
         ret: ret.into_iter().map(|expr| expr.into()).collect(),

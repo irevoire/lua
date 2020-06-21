@@ -4,15 +4,15 @@ use ast::expression::{binary, Binary, Constant};
 
 impl Run for Binary {
     fn run(&self, env: &mut Environment) -> Expression {
-        let left = if let Expression::Constant(Constant::Int(left)) = self.left.run(env) {
-            left
-        } else {
-            panic!("left side of + is not a number");
+        let left = match self.left.run(env) {
+            Expression::Constant(Constant::Int(left)) => left,
+            Expression::EarlyReturn(box Expression::Constant(Constant::Int(left))) => left,
+            bad => panic!("left side of {} is not a number: {}", self.op, bad),
         };
-        let right = if let Expression::Constant(Constant::Int(right)) = self.right.run(env) {
-            right
-        } else {
-            panic!("right side of + is not a number");
+        let right = match self.right.run(env) {
+            Expression::Constant(Constant::Int(right)) => right,
+            Expression::EarlyReturn(box Expression::Constant(Constant::Int(right))) => right,
+            bad => panic!("right side of {} is not a number: {}", self.op, bad),
         };
         match self.op {
             binary::Operator::Add => Expression::Constant(Constant::Int(left + right)),

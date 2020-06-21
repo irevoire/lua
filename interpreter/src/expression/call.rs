@@ -13,9 +13,14 @@ impl Run for Call {
             panic!("bad number of parameters");
         }
 
-        for (name, expr) in fun.params.iter().zip(&self.params) {
-            assignment(name.clone(), expr.run(env)).run(env);
+        let params: Vec<Expression> = self.params.iter().map(|expr| expr.run(env)).collect();
+        env.push_scope();
+
+        for (name, expr) in fun.params.iter().zip(params.into_iter()) {
+            assignment(name.clone(), expr).run(env);
         }
-        fun.body.run(env)
+        let res = fun.body.run(env);
+        env.pop_scope();
+        res
     }
 }

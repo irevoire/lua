@@ -1,4 +1,4 @@
-use super::{Sequence, Statement};
+use super::Sequence;
 use crate::expression::Expression;
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -10,13 +10,13 @@ pub struct IfThenElse {
 
 impl std::fmt::Display for IfThenElse {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        writeln!(f, "if {} then", self.cond)?;
+        writeln!(f, "\x1B[33;1mif\x1B[m {} \x1B[33;1mthen\x1B[m", self.cond)?;
         self.if_body.fmt(f)?;
         if let Some(body) = &self.else_body {
-            writeln!(f, "else")?;
-            body.fmt(f)
-        } else {
-            Ok(())
+            writeln!(f, "\x1B[33;1melse\x1B[m")?;
+            body.fmt(f)?;
         }
+        writeln!(f, "\x1B[33;1mend\x1B[m")?;
+        Ok(())
     }
 }

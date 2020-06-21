@@ -15,6 +15,7 @@ pub enum Expression {
     Binary(binary::Binary),
     Call(call::Call),
     Constant(constant::Constant),
+    EarlyReturn(Box<Expression>),
     Function(function::Function),
     Literal(literal::Literal),
     Nil,
@@ -42,6 +43,10 @@ pub fn call(name: impl Into<Literal>, params: Vec<Expression>) -> Expression {
 
 pub fn constant(c: impl Into<Constant>) -> Expression {
     Expression::Constant(c.into())
+}
+
+pub fn early_return(r: impl Into<Expression>) -> Expression {
+    Expression::EarlyReturn(Box::new(r.into()))
 }
 
 pub fn function(
@@ -72,6 +77,7 @@ impl std::fmt::Display for Expression {
             Binary(b) => b.fmt(f),
             Call(c) => c.fmt(f),
             Constant(c) => c.fmt(f),
+            EarlyReturn(r) => r.fmt(f),
             Function(fun) => fun.fmt(f),
             Literal(s) => s.fmt(f),
             Nil => write!(f, "nil"),
