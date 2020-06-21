@@ -1,4 +1,4 @@
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Call {
     pub name: super::Literal,
     pub params: Vec<super::Expression>,

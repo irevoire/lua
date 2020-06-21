@@ -1,6 +1,6 @@
 use super::Statement;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Sequence {
     pub sequence: Vec<Statement>,
 }

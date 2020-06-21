@@ -1,6 +1,6 @@
 use crate::expression::Expression;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Assignment {
     pub left: Expression,
     pub right: Expression,

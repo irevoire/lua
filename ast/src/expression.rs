@@ -10,7 +10,7 @@ pub use constant::Constant;
 pub use function::Function;
 pub use literal::Literal;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub enum Expression {
     Binary(binary::Binary),
     Call(call::Call),
