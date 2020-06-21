@@ -23,7 +23,7 @@ fn main() {
 }
 
 fn add() -> Expression {
-    let expr = binary(literal("left"), binary::Operator::Add, literal("left"));
+    let expr = binary(literal("left"), binary::Operator::Add, literal("right"));
 
     function(
         Some("add".into()),
