@@ -1,7 +1,6 @@
 use ast::expression::*;
 use ast::statement::*;
-use interpreter::Run;
-use std::collections::HashMap;
+use interpreter::{Environment, Run};
 
 fn main() {
     let stmt = sequence(vec![
@@ -12,7 +11,7 @@ fn main() {
         ),
         r#return(vec![literal("result")]),
     ]);
-    let mut env = HashMap::new();
+    let mut env = Environment::new();
 
     println!("=================== CODE =================");
     println!("{}", stmt);
