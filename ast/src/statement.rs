@@ -1,13 +1,16 @@
 pub mod assignment;
+pub mod r#return;
 pub mod sequence;
 
 pub use assignment::Assignment;
+pub use r#return::Return;
 pub use sequence::Sequence;
 
 #[derive(Clone, Debug)]
 pub enum Statement {
     Assignment(assignment::Assignment),
     Expression(crate::expression::Expression),
+    Return(r#return::Return),
     Sequence(sequence::Sequence),
 }
 
@@ -20,10 +23,13 @@ pub fn assignment(left: impl Into<Expression>, right: impl Into<Expression>) -> 
     })
 }
 
-pub fn sequence(sequence: Vec<impl Into<Statement>>) -> Statement {
-    Statement::Sequence(Sequence {
-        sequence: sequence.into_iter().map(|stmt| stmt.into()).collect(),
+pub fn r#return(ret: Vec<impl Into<Expression>>) -> Statement {
+    Statement::Return(Return {
+        ret: ret.into_iter().map(|expr| expr.into()).collect(),
     })
+}
+pub fn sequence(sequence: Vec<Statement>) -> Statement {
+    Statement::Sequence(Sequence { sequence })
 }
 
 use Statement::*;
@@ -33,6 +39,7 @@ impl std::fmt::Display for Statement {
         match self {
             Assignment(s) => s.fmt(f),
             Expression(e) => e.fmt(f),
+            Return(r) => r.fmt(f),
             Sequence(s) => s.fmt(f),
         }
     }

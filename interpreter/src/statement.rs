@@ -1,4 +1,5 @@
 pub mod assignment;
+pub mod r#return;
 pub mod sequence;
 
 use crate::{Environment, Run};
@@ -10,6 +11,7 @@ impl Run for Statement {
         match self {
             Statement::Assignment(a) => a.run(env),
             Statement::Expression(e) => e.run(env),
+            Statement::Return(r) => r.run(env),
             Statement::Sequence(s) => s.run(env),
         }
     }
