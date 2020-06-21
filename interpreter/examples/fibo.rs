@@ -29,7 +29,7 @@ fn fibo() -> Expression {
     let sequence = Sequence {
         sequence: vec![
             ifthenelse(
-                binary(literal("n"), binary::Operator::LowerOrEqual, constant(2)),
+                binary(literal("n"), binary::Operator::LowerThan, constant(2)),
                 Sequence::new(vec![r#return(vec![constant(1)])]),
                 None,
             ),
