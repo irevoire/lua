@@ -2,6 +2,14 @@
 pub enum Operator {
     Add,
     Sub,
+    Mul,
+    Div,
+    Equal,
+    NotEqual,
+    LowerThan,
+    LowerOrEqual,
+    GreaterThan,
+    GreaterOrEqual,
 }
 
 use Operator::*;
@@ -11,6 +19,14 @@ impl std::fmt::Display for Operator {
         match self {
             Add => write!(f, "+"),
             Sub => write!(f, "-"),
+            Mul => write!(f, "*"),
+            Div => write!(f, "/"),
+            Equal => write!(f, "="),
+            NotEqual => write!(f, "!="),
+            LowerThan => write!(f, "<"),
+            LowerOrEqual => write!(f, "<="),
+            GreaterThan => write!(f, ">"),
+            GreaterOrEqual => write!(f, ">="),
         }
     }
 }

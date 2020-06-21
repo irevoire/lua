@@ -17,6 +17,14 @@ impl Run for Binary {
         match self.op {
             binary::Operator::Add => Expression::Constant(Constant::Int(left + right)),
             binary::Operator::Sub => Expression::Constant(Constant::Int(left - right)),
+            binary::Operator::Mul => Expression::Constant(Constant::Int(left * right)),
+            binary::Operator::Div => Expression::Constant(Constant::Int(left / right)),
+            binary::Operator::Equal => Expression::Constant(Constant::Bool(left == right)),
+            binary::Operator::NotEqual => Expression::Constant(Constant::Bool(left != right)),
+            binary::Operator::LowerThan => Expression::Constant(Constant::Bool(left < right)),
+            binary::Operator::LowerOrEqual => Expression::Constant(Constant::Bool(left <= right)),
+            binary::Operator::GreaterThan => Expression::Constant(Constant::Bool(left > right)),
+            binary::Operator::GreaterOrEqual => Expression::Constant(Constant::Bool(left >= right)),
         }
     }
 }
